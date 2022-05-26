@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Sheet</title>
+
+</head>
+<body>
+        <h1 style=" color: blue; text-align: center; font-family: cursive; padding-bottom: 12px;">Attendance Sheet</h1>
+
+            <div   align="center" style=" font-family: cursive; padding-bottom: 12px;">
+                <table >
+                    <h1>
+                        {% for table in tables %}
+                        <h2 style="text-align: center;">{{titles[loop.index]}}</h2>
+                        {{table | safe}} {% endfor %}
+                    </h1>
+                </table>
+                <br><br>
+
+                <a  href="http://127.0.0.1:5000/message"  style="margin-top: 100px; color: blue; font-size: 20px; font-family: cursive; padding-bottom: 12px;text-decoration: none">Send the attendance to your email</a>
+            </div>
+
+</body>
+</html>

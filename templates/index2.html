@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Face Recognition</title>
+    <style>
+        body
+        {
+            background-color: #c580d278;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: 15px groove #0001cc;
+            }
+
+        .tale {
+            display: block;
+            text-align: center;
+            padding-top: 47px;
+            font-size: 25px;
+            font-family:cursive;
+            text-decoration: none;
+            color: Blue;
+            }
+    </style>
+
+
+</head>
+<body>
+        <h1 style="color:Blue;font-family:cursive; text-align: center;">Video Streaming</h1>
+        <div>
+            <img src="{{ url_for('video') }}" width = "40%" class="center"/>
+        </div>
+        <a href="http://127.0.0.1:5000/table" class="tale">View the attendance</a>
+</body>
+</html>

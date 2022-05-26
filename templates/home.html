@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 style="color:Blue;font-family:cursive; text-align: center;">Flask Mail Sending App</h1>
+    <form action="{{url_for('send_message')}}" method="POST" align="center">
+        <input type="email" name="email" placeholder="Email" style="color:Blue;font-family:cursive; text-align: center; padding: 10px 50px; margin:20px 3px;border:8px inset #003c739e;border-radius: 15px;" required>
+        <br>
+        <input type="submit" style="color:Blue;font-family:cursive; text-align: center; padding: 5px 5px; margin:33px 11px;border:8px inset #003c739e;" value="Send via Email">
+    </form>
+</body>
+</html>
