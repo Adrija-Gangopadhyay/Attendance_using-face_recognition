@@ -81,36 +81,36 @@ def generate_frames():
                 matchIndex = np.argmin(faceDis)  # Takes the image with a minimum distance
 
                 if matches[matchIndex]:
-                    name = classNames[matchIndex].upper()
+                    name = classNames[matchIndex].upper()   # Makes the required name in uppercase
                     y1, x2, y2, x1 = faceLoc
                     y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Creates a rectangle bordering the face
                     cv2.rectangle(frame, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
                     cv2.putText(frame, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
-                    markAttendance(name)
+                    markAttendance(name)  # marks attendance
 
             def __init__(self):
                 self.video = cv2.VideoCapture(0)
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
+            ret, buffer = cv2.imencode('.jpg', frame)  # Reads the image from webcam
+            frame = buffer.tobytes()  # Returns in byte format
 
         yield (b'--frame\r\n'
-            b'Content-Type:image/jpeg\r\n\r\n' + frame + b'\r\n')
+            b'Content-Type:image/jpeg\r\n\r\n' + frame + b'\r\n')  # Returns image
 
 
-df = pd.read_csv("Attendance.csv")
+df = pd.read_csv("Attendance.csv")   # Reads Attendance.csv with the help of Pandas library
 df.to_csv("Attendance.csv", index=None)
 
 
-@app.route('/')
+@app.route('/')   # Home page
 def index():
-    return render_template('index2.html')
+    return render_template('index2.html')   # Renders template of home page
 
 
-@app.route('/table')
+@app.route('/table')   # Page where the attendance sheet is shown
 def csvtohtml():
     data = pd.read_csv("Attendance.csv")
-    return render_template("upload.html", tables=[data.to_html()], titles=[''])
+    return render_template("upload.html", tables=[data.to_html()], titles=[''])  # shows the CSV file in table format
 
 
 @app.route('/video')
@@ -118,7 +118,7 @@ def video():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-@app.route('/message')
+@app.route('/message')   # Page from where we can sen an email
 def index_message():
     return render_template("home.html")
 
@@ -126,20 +126,20 @@ def index_message():
 @app.route('/send_message', methods=['GET', 'POST'])
 def send_message():
     if request.method == "POST":
-        email = request.form['email']
-        subject = "Notification regarding attendance"
-        msg = "Greetings! Attached below is the attendance sheet. Thank You!"
-        message = Message(subject, sender="arenesnells@gmail.com", recipients=[email])
+        email = request.form['email']  # Collects the email the user has given
+        subject = "Notification regarding attendance"  # Email subject
+        msg = "Greetings! Attached below is the attendance sheet. Thank You!"   # Email Body
+        message = Message(subject, sender="arenesnells@gmail.com", recipients=[email])  # Formatting the email
 
         message.body = msg
         with app.open_resource('Attendance.csv') as cat:
-            message.attach('Attendance.csv', 'text/csv', cat.read())
-        mail.send(message)
+            message.attach('Attendance.csv', 'text/csv', cat.read())    # Attaches the CSV file
+        mail.send(message)  # Sends the mail
 
         success = "Message sent"
 
-        return render_template("result.html", success=success)
+        return render_template("result.html", success=success)  # Page to show if the message has been successfully sent
 
 
-if __name__  == "__main__":
+if __name__  == "__main__":  # Running the flask app
     app.run(debug=True)

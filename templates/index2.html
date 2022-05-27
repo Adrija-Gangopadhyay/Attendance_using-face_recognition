@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Face Recognition</title>
+<!--    Adding CSS-->
     <style>
         body
         {
@@ -32,8 +33,10 @@
 <body>
         <h1 style="color:Blue;font-family:cursive; text-align: center;">Video Streaming</h1>
         <div>
+<!--            Shows the webcam-->
             <img src="{{ url_for('video') }}" width = "40%" class="center"/>
         </div>
+<!--        Redirects to the Attendance page-->
         <a href="http://127.0.0.1:5000/table" class="tale">View the attendance</a>
 </body>
 </html>
