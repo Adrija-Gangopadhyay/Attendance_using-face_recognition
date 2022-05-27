@@ -99,7 +99,7 @@ df = pd.read_csv("Attendance.csv")
 df.to_csv("Attendance.csv", index=None)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
     return render_template('index2.html')
 
