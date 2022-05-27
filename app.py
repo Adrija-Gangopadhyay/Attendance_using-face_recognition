@@ -1,3 +1,6 @@
+#  importing libraries needed for the project
+
+
 from flask import Flask, render_template, Response, request
 import cv2
 import numpy as np
@@ -8,9 +11,10 @@ import pandas as pd
 from flask_mail import Mail, Message
 
 
-app = Flask(__name__)
-camera = cv2.VideoCapture(0)
+app = Flask(__name__)  # creates the Flask instance
+camera = cv2.VideoCapture(0)   # captures through our default camera
 
+#  Creates an XML file to store the configurations needed to send the mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'arenesnells@gmail.com'
@@ -18,16 +22,16 @@ app.config['MAIL_PASSWORD'] = 'Hagudada@20'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
-mail = Mail(app)
+mail = Mail(app)  # Manages mails
 
 
-path = 'ImagesAttendance'
+path = 'ImagesAttendance'  # ImagesAttendance keeps a copy of all those whose attendance is to be taken
 images = []
 classNames = []
-myList = os.listdir(path)
+myList = os.listdir(path)   # Explores ImagesAttendance
 
 for cl in myList:
-    curImg = cv2.imread(f'{path}/{cl}')
+    curImg = cv2.imread(f'{path}/{cl}')   # Loads the image
     images.append(curImg)
     classNames.append(os.path.splitext(cl)[0])
 
@@ -36,10 +40,10 @@ for cl in myList:
 def findEncodings(images):
     encodeList = []
     for img in images:
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        encode = face_recognition.face_encodings(img)[0]
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Converts the image to RGB
+        encode = face_recognition.face_encodings(img)[0]   # Returns the 128-dimension face encoding for each face in the image
         encodeList.append(encode)
-    return encodeList
+    return encodeList  # Returns the dimensions
 
 
 def markAttendance(name):
@@ -49,10 +53,10 @@ def markAttendance(name):
         for line in myDataList:
             entry = line.split(',')
             nameList.append(entry[0])
-        if name not in nameList:
+        if name not in nameList:  # If the person is spotted first time by camera
             now = datetime.now()
-            dtString = now.strftime('%H:%M:%S')
-            f.writelines(f'\n{name}, {dtString}')
+            dtString = now.strftime('%H:%M:%S')  # Format of returning current timestamp
+            f.writelines(f'\n{name}, {dtString}')  # Writes the name and datetime in the CSV file
 
 
 encodeListKnown = findEncodings(images)
@@ -60,12 +64,12 @@ encodeListKnown = findEncodings(images)
 
 def generate_frames():
     while True:
-        success, frame = camera.read()
+        success, frame = camera.read()  # Checks if camera is open
 
         if not success:
             break
         else:
-            imgS = cv2.resize(frame, (0, 0), None, 0.25, 0.25)
+            imgS = cv2.resize(frame, (0, 0), None, 0.25, 0.25)   # Resizes the frame to it's 1/4th
             imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
 
             facesCurFrame = face_recognition.face_locations(imgS)
@@ -73,9 +77,8 @@ def generate_frames():
 
             for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
                 matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
-                faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
-                faceDis = faceDis*100
-                matchIndex = np.argmin(faceDis)
+                faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)  # Checks the distance between all the images and the given image spotted on camera
+                matchIndex = np.argmin(faceDis)  # Takes the image with a minimum distance
 
                 if matches[matchIndex]:
                     name = classNames[matchIndex].upper()
